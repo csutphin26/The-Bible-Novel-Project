@@ -1,0 +1,143 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const allChapters = await getCollection('chapters');
+const sorted = allChapters.sort((a, b) => {
+  if (a.data.bookSlug !== b.data.bookSlug) return a.data.bookSlug.localeCompare(b.data.bookSlug);
+  return a.data.chapterNumber - b.data.chapterNumber;
+});
+
+// Group by book
+const byBook = new Map<string, { book: string; bookSubtitle?: string; chapters: typeof sorted }>();
+for (const ch of sorted) {
+  const key = ch.data.bookSlug;
+  if (!byBook.has(key)) {
+    byBook.set(key, { book: ch.data.book, bookSubtitle: ch.data.bookSubtitle, chapters: [] });
+  }
+  byBook.get(key)!.chapters.push(ch);
+}
+---
+<Layout title="Bible as a Novel" description="A novelized retelling of the Bible—simple, clear, and faithful to Scripture.">
+  <div class="home">
+    <h1 class="home-title">Bible as a Novel</h1>
+    <p class="home-intro">A story-form retelling of the Bible. Simple words. Clear. For anyone who wants to read, understand, and keep going.</p>
+
+    <nav class="books" aria-label="Books and chapters">
+      {Array.from(byBook.entries()).map(([slug, { book, bookSubtitle, chapters }]) => (
+        <section class="book-block">
+          <h2 class="book-title">{book}{bookSubtitle ? ` — ${bookSubtitle}` : ''}</h2>
+          <p class="book-progress" data-book-progress data-book-slug={slug} data-book-chapters={chapters.map((ch) => ch.slug).join(',')} aria-live="polite">0 of {chapters.length} read</p>
+          <ol class="chapter-list">
+            {chapters.map((ch) => (
+              <li>
+                <a href={`/read/${slug}/${ch.slug}`} class="chapter-link" data-chapter-slug={ch.slug}>
+                  <span class="chapter-status" aria-hidden="true"></span>
+                  <span class="chapter-num">Chapter {ch.data.chapterNumber}</span>
+                  <span class="chapter-title">{ch.data.title}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ))}
+    </nav>
+  </div>
+</Layout>
+
+<style>
+  .home {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: var(--space) 1rem 3rem;
+  }
+
+  .home-title {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    color: var(--color-text);
+  }
+
+  .home-intro {
+    color: var(--color-text-soft);
+    font-size: 1rem;
+    margin: 0 0 2rem;
+    line-height: 1.5;
+  }
+
+  .books {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .book-block {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .book-block:last-child {
+    border-bottom: none;
+  }
+
+  .book-title {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0 0 0.75rem;
+    color: var(--color-text);
+  }
+
+  .chapter-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .chapter-list li {
+    margin: 0;
+  }
+
+  .chapter-link {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    color: var(--color-text);
+    text-decoration: none;
+    border-radius: 4px;
+  }
+
+  .chapter-link:hover {
+    color: var(--color-accent);
+  }
+
+  .chapter-link.read .chapter-status::after {
+    content: '';
+    display: inline-block;
+    width: 0.6em;
+    height: 0.6em;
+    margin-right: 0.25em;
+    background: var(--color-accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .book-progress {
+    font-size: 0.85rem;
+    color: var(--color-text-soft);
+    margin: 0 0 0.5rem;
+  }
+
+  .chapter-num {
+    font-size: 0.85rem;
+    color: var(--color-text-soft);
+    flex-shrink: 0;
+  }
+
+  .chapter-title {
+    font-weight: 500;
+  }
+</style>

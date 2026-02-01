@@ -1,0 +1,210 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { series, totalPlannedChapters } from '../data/series';
+
+const allChapters = await getCollection('chapters');
+
+let totalCompleted = 0;
+const bookProgress = series.map((book) => {
+  const bookChapters = allChapters
+    .filter((c) => c.data.bookSlug === book.slug)
+    .sort((a, b) => a.data.chapterNumber - b.data.chapterNumber);
+  const completedChapters = bookChapters.length;
+  totalCompleted += completedChapters;
+  return {
+    ...book,
+    completedChapters,
+    firstChapterSlug: bookChapters[0]?.slug,
+  };
+});
+const seriesPercent = totalPlannedChapters > 0 ? Math.round((totalCompleted / totalPlannedChapters) * 100) : 0;
+---
+<Layout title="Series" description="Full series roadmap for Bible as a Novel — 19 books, ~150–170 chapters.">
+  <div class="series-page">
+    <h1 class="series-title">Full Series</h1>
+    <p class="series-intro">The whole Bible retold as a novel. One story, book by book.</p>
+
+    <div class="series-progress" role="status" aria-label="Overall series progress">
+      <span class="series-progress-text">{totalCompleted} of {totalPlannedChapters} chapters</span>
+      <div class="series-progress-bar" aria-hidden="true">
+        <div class="series-progress-fill" style={`width: ${seriesPercent}%`}></div>
+      </div>
+    </div>
+
+    <ol class="book-list">
+      {bookProgress.map((book) => (
+        <li class={`book-row ${book.completedChapters === 0 ? 'not-started' : ''}`}>
+          <span class="book-num" aria-hidden="true">{book.number}</span>
+          <div class="book-info">
+            <h2 class="book-title">{book.title}</h2>
+            <p class="book-subtitle">{book.subtitle} — {book.biblicalCoverage}</p>
+            <p class="book-chapters">
+              {book.completedChapters} of {book.plannedChapters} chapters
+              {book.firstChapterSlug ? (
+                <a href={`/read/${book.slug}/${book.firstChapterSlug}`} class="book-start">Start reading</a>
+              ) : (
+                <span class="book-coming">Coming soon</span>
+              )}
+            </p>
+          </div>
+        </li>
+      ))}
+    </ol>
+
+    <p class="series-footer">
+      <a href="/">← Table of contents</a>
+    </p>
+  </div>
+</Layout>
+
+<style>
+  .series-page {
+    max-width: var(--measure);
+    margin: 0 auto;
+    padding: var(--space) 1rem 3rem;
+  }
+
+  .series-title {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem;
+    color: var(--color-text);
+  }
+
+  .series-intro {
+    color: var(--color-text-soft);
+    font-size: 1rem;
+    margin: 0 0 1.5rem;
+    line-height: 1.5;
+  }
+
+  .series-progress {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background: var(--color-paper);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+  }
+
+  .series-progress-text {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--color-text);
+  }
+
+  .series-progress-bar {
+    height: 8px;
+    margin-top: 0.5rem;
+    background: var(--color-border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .series-progress-fill {
+    height: 100%;
+    background: var(--color-accent);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  .book-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .book-row {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1rem;
+    background: var(--color-paper);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+  }
+
+  .book-row.not-started {
+    opacity: 0.85;
+  }
+
+  .book-num {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-text-soft);
+    background: var(--color-bg);
+    border-radius: 50%;
+  }
+
+  .book-row:not(.not-started) .book-num {
+    color: var(--color-accent);
+  }
+
+  .book-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .book-title {
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem;
+    color: var(--color-text);
+  }
+
+  .book-subtitle {
+    font-size: 0.85rem;
+    color: var(--color-text-soft);
+    margin: 0 0 0.5rem;
+  }
+
+  .book-chapters {
+    font-size: 0.9rem;
+    color: var(--color-text-soft);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .book-start {
+    color: var(--color-accent);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .book-start:hover {
+    text-decoration: underline;
+  }
+
+  .book-coming {
+    font-style: italic;
+    color: var(--color-text-soft);
+  }
+
+  .series-footer {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+  }
+
+  .series-footer a {
+    color: var(--color-text-soft);
+    text-decoration: none;
+  }
+
+  .series-footer a:hover {
+    color: var(--color-accent);
+  }
+</style>

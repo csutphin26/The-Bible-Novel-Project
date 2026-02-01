@@ -1,0 +1,36 @@
+---
+description: Style and rules for writing Bible-as-a-novel chapter content
+globs: src/content/chapters/**/*.md
+alwaysApply: false
+---
+
+# Bible as a Novel — Chapter Content
+
+When editing or adding files in `src/content/chapters/`, follow the project’s creative direction.
+
+## Language & style
+
+- **Read like a novel.** Flowing prose, full paragraphs, sentences that connect. Not choppy or line-by-line like a children’s book.
+- **Modern wording.** Use today’s way of speaking and writing. No archaic phrasing (“upon your belly you shall go,” “till the ground,” “eat of,” “you shall”). Prefer “you will,” “because,” “work the ground,” “eat from.” No slang.
+- **Easy to read.** Clear, concrete words. No theological jargon unless unavoidable. Accessible without feeling childish.
+- **Rhythm.** Mix short and medium sentences. Use longer sentences when they help the story flow. Write in paragraphs, not single-line staccato.
+
+## Narrative
+
+- Novelized retelling. Third-person. Scene-driven. Enough detail to see and feel the moment.
+- Light internal emotion (awe, fear, confusion) is welcome. No invented inner thoughts for God; show Him through actions, words, presence.
+- Faithful to Scripture: no added doctrine, no modernized morals, no direct “this teaches us” lessons.
+
+## Avoid
+
+- Verse numbers, Bible chapter numbers, sermon language, commentary tone.
+- Chopping every thought into a single short line—write in paragraphs and let the story flow.
+- Explanations, reflections, study questions (those belong in the separate companion workbook).
+
+## Frontmatter
+
+Each chapter file must have: `book`, `bookSubtitle` (optional), `bookSlug`, `chapterNumber`, `title`. See existing files in `src/content/chapters/` for the pattern.
+
+## Reference
+
+Full instructions: root `PROJECT_INSTRUCTIONS.md`.
