@@ -8,7 +8,7 @@
 
 | Book # | Book Title | Biblical Coverage | Total Chapters (Planned) | Chapters Completed | % Complete | Notes |
 |--------|------------|-------------------|--------------------------|--------------------|------------|-------|
-| 1 | Beginnings | Genesis | 10 | 5 | 50% | Order and Breath ✓, The Garden ✓, The Choice ✓, Brothers ✓, The Flood ✓ |
+| 1 | Beginnings | Genesis | 10 | 6 | 60% | Order and Breath ✓, The Garden ✓, The Choice ✓, Brothers ✓, The Flood ✓, A Promise in the Sky ✓ |
 | 2 | The God Who Delivers | Exodus | 7 | 0 | 0% | |
 | 3 | Learning to Live with God | Leviticus | 5 | 0 | 0% | |
 | 4 | Between Freedom and the Promise | Numbers | 6 | 0 | 0% | |
@@ -44,7 +44,7 @@
 | 3 | The Choice | ✓ Complete |
 | 4 | Brothers | ✓ Complete |
 | 5 | The Flood | ✓ Complete |
-| 6 | A Promise in the Sky | Planned |
+| 6 | A Promise in the Sky | ✓ Complete |
 | 7 | Scattered | Planned |
 | 8 | The Call | Planned |
 | 9 | The Family of Promise | Planned |

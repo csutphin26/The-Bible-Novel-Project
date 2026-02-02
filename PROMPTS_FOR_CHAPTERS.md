@@ -8,11 +8,11 @@ Use this file every time you want to move forward with the next chapter. Copy th
 
 Before you prompt, set the **last completed chapter** to whatever you most recently finished. Right now it is:
 
-**Last completed chapter:** Genesis – Chapter Five: The Flood
+**Last completed chapter:** Genesis – Chapter Six: A Promise in the Sky
 
-So the **next chapter to write** is: **Genesis – Chapter Six: A Promise in the Sky** (from `ROADMAP.md`).
+So the **next chapter to write** is: **Genesis – Chapter Seven: Scattered** (from `ROADMAP.md`).
 
-When you finish Chapter 2, change the line above to “Genesis – Chapter Two: The Garden” and the next prompt will ask for Chapter 3, and so on.
+When you finish a chapter, change the line above to “Genesis – Chapter Two: The Garden” (e.g. after Chapter 7, use "Genesis – Chapter Seven: Scattered") so the next prompt asks for the following chapter.
 
 ---
 
@@ -22,14 +22,14 @@ Use this **exact** prompt each time (only change the “last completed” line a
 
 ```
 We are continuing the project Bible as a Novel.
-The last completed chapter was: Genesis – Chapter Five: The Flood.
+The last completed chapter was: Genesis – Chapter Six: A Promise in the Sky.
 Write the next chapter following PROJECT_INSTRUCTIONS.md and the style of the existing chapters in src/content/chapters/ (flowing novel prose, paragraphs, easy to read but not childish).
 
 Create the new chapter file in src/content/chapters/ with the correct frontmatter (book, bookSubtitle, bookSlug, chapterNumber, title). Use the next chapter title from ROADMAP.md. Write only the chapter prose—no commentary, no verse numbers, no study questions.
 ```
 
 **What to change each time:**  
-Replace **Genesis – Chapter One: Order and Breath** with the actual last chapter you completed (e.g. after Chapter 2, use **Genesis – Chapter Two: The Garden**).
+Replace the "last completed chapter" line with the actual last chapter you completed (e.g. after Chapter 7, use **Genesis – Chapter Seven: Scattered**).
 
 ---
 
@@ -38,7 +38,7 @@ Replace **Genesis – Chapter One: Order and Breath** with the actual last chapt
 If you’ve already said “we’re continuing Bible as a Novel” in the chat, you can use:
 
 ```
-The last completed chapter was: Genesis – Chapter Five: The Flood. Write the next chapter, create the file in src/content/chapters/ with correct frontmatter, and use the next chapter title from ROADMAP.md.
+The last completed chapter was: Genesis – Chapter Six: A Promise in the Sky. Write the next chapter, create the file in src/content/chapters/ with correct frontmatter, and use the next chapter title from ROADMAP.md.
 ```
 
 Again: update the “last completed chapter” line each time.
@@ -48,7 +48,7 @@ Again: update the “last completed chapter” line each time.
 ## Where to get the next chapter title
 
 - **Book 1 (Genesis):** See the “Book 1 — Beginnings” table in `ROADMAP.md`.  
-  Next up: **Chapter 2 – The Garden**, then **The Choice**, **Brothers**, etc.
+  Next up: **Chapter 7 – Scattered**, then **The Call**, **The Family of Promise**, **From Pit to Palace**, etc.
 - **Later books:** Use the chapter counts and focus in `ROADMAP.md`; you can ask the AI to suggest a title from the biblical content if you prefer.
 
 ---
