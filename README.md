@@ -37,7 +37,17 @@ Open [http://localhost:4321](http://localhost:4321). You’ll see the table of c
 
 ## Read aloud (audio)
 
-Each chapter page has a **“Read aloud”** button. It uses your device’s built-in text-to-speech (browser speech) to read the chapter—no audio files or hosting needed. Click **“Read aloud”** to start; click **“Stop”** to stop. You can also add your own narrated MP3s later (e.g. in `public/audio/`) and play them per chapter; see **DEPLOY.md** for details.
+Each chapter page has a **“Read aloud”** button. The app tries, in order:
+
+1. **Uploaded audio file** — If you add an MP3 at `public/audio/{chapter-slug}.mp3` (e.g. `public/audio/genesis-01-order-and-breath.mp3`), that file is played. No API needed.
+2. **ElevenLabs (natural voice)** — If you set an API key (see below), the app calls ElevenLabs to generate speech from the chapter text and plays it.
+3. **Browser TTS** — If neither is available, it falls back to the device’s built-in text-to-speech.
+
+**To use ElevenLabs:** Get an API key at [elevenlabs.io](https://elevenlabs.io). In Vercel: Project → **Settings** → **Environment Variables**. Add:
+- `ELEVENLABS_API_KEY` = your API key  
+- `ELEVENLABS_VOICE_ID` = (optional) a voice ID from ElevenLabs; if omitted, a default voice is used.
+
+Redeploy after adding env vars. The **Read aloud** button will then use ElevenLabs for natural-sounding narration when no uploaded file exists for that chapter.
 
 ---
 

@@ -1,4 +1,4 @@
-# Deploying Bible as a Novel (GitHub + Vercel)
+m# Deploying Bible as a Novel (GitHub + Vercel)
 
 Follow these steps to put your project on GitHub and host it on Vercel with a free URL. You can do this even if you’ve never used GitHub or Vercel before.
 
@@ -56,7 +56,12 @@ git remote add origin https://github.com/YOUR-USERNAME/The-Bible-Project.git
 git push -u origin main
 ```
 
-If GitHub asks you to sign in, use your GitHub username and a **Personal Access Token** (not your normal password). To create a token: GitHub → **Settings** → **Developer settings** → **Personal access tokens** → **Generate new token**. Give it a name and check **repo**. Copy the token and paste it when Terminal asks for a password.
+If GitHub asks you to sign in, use your GitHub username and a **Personal Access Token** (not your normal password). To create a token:
+
+- **Classic token:** GitHub → **Settings** → **Developer settings** → **Personal access tokens** → **Tokens (classic)** → **Generate new token**. Give it a name, choose an expiration, and check the **repo** scope. Copy the token and paste it when Terminal asks for a password.
+- **Fine-grained token:** GitHub → **Settings** → **Developer settings** → **Personal access tokens** → **Fine-grained tokens** → **Generate new token**. Under **Repository access**, select **Only select repositories** and choose your Bible project repo. Under **Repository permissions**, set **Contents** to **Read and write**. Generate the token, copy it, and paste it when Terminal asks for a password.
+
+You only need **Contents: Read and write** for that repo to push your code.
 
 After `git push` finishes, refresh your repo on GitHub. You should see all your project files there.
 
@@ -112,6 +117,19 @@ That’s your live site. Click **Visit** to open it. You can share this link; it
    ```
 
 3. Vercel will automatically detect the push, run a new build, and update your live site in a minute or two. No need to do anything on Vercel.
+
+---
+
+## Optional: Natural-sounding “Read aloud” (ElevenLabs)
+
+The **Read aloud** button tries, in order: (1) an uploaded MP3 at `public/audio/{chapter-slug}.mp3`, (2) the ElevenLabs API, (3) the device’s built-in voice. To use ElevenLabs on Vercel:
+
+1. Get an API key at [elevenlabs.io](https://elevenlabs.io).
+2. In Vercel: open your project → **Settings** → **Environment Variables**.
+3. Add `ELEVENLABS_API_KEY` with your key. Optionally add `ELEVENLABS_VOICE_ID` (a voice ID from ElevenLabs; if omitted, a default voice is used).
+4. Redeploy (e.g. push a small change or click **Redeploy** in Vercel).
+
+The `api/speak.js` serverless function runs only on Vercel; it will not work when you run the site locally with `npm run dev` unless you use a tool that runs Vercel dev locally.
 
 ---
 

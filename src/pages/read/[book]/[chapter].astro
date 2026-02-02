@@ -38,6 +38,7 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
       </div>
       <div class="reader-actions">
         <button type="button" class="read-aloud-btn" id="read-aloud-btn" aria-label="Read this chapter aloud">Read aloud</button>
+        <span class="read-aloud-hint" id="read-aloud-hint" aria-live="polite"></span>
       </div>
     </header>
 
@@ -61,41 +62,113 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
       ) : <span class="nav-placeholder" />}
     </nav>
   </article>
-  <script is:inline>
+  <script is:inline define:vars={{ chapterSlug: chapter.slug }}>
     (function () {
       var btn = document.getElementById('read-aloud-btn');
+      var hint = document.getElementById('read-aloud-hint');
       var content = document.getElementById('chapter-content');
       if (!btn || !content) return;
+      var slug = typeof chapterSlug !== 'undefined' ? chapterSlug : '';
       var synth = window.speechSynthesis;
-      var speaking = false;
-      function stop() {
-        synth.cancel();
-        speaking = false;
-        btn.textContent = 'Read aloud';
-        btn.setAttribute('aria-label', 'Read this chapter aloud');
+      var playing = false;
+      var currentAudio = null;
+      var currentBlobUrl = null;
+
+      function setPlaying(value) {
+        playing = value;
+        btn.textContent = value ? 'Stop' : 'Read aloud';
+        btn.setAttribute('aria-label', value ? 'Stop reading aloud' : 'Read this chapter aloud');
+        if (hint) hint.textContent = '';
       }
-      btn.addEventListener('click', function () {
-        if (speaking) {
-          stop();
-          return;
+
+      function stop() {
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio = null;
         }
+        if (currentBlobUrl) {
+          URL.revokeObjectURL(currentBlobUrl);
+          currentBlobUrl = null;
+        }
+        synth.cancel();
+        setPlaying(false);
+      }
+
+      function playWithBrowserTTS() {
         var text = content.innerText || content.textContent || '';
         if (!text.trim()) return;
         var u = new SpeechSynthesisUtterance(text);
         u.rate = 0.9;
-        u.onend = function () {
-          speaking = false;
-          btn.textContent = 'Read aloud';
-          btn.setAttribute('aria-label', 'Read this chapter aloud');
-        };
-        u.onerror = function () {
-          speaking = false;
-          btn.textContent = 'Read aloud';
-        };
+        u.onend = setPlaying.bind(null, false);
+        u.onerror = setPlaying.bind(null, false);
         synth.speak(u);
-        speaking = true;
-        btn.textContent = 'Stop';
-        btn.setAttribute('aria-label', 'Stop reading aloud');
+        setPlaying(true);
+      }
+
+      btn.addEventListener('click', function () {
+        if (playing) {
+          stop();
+          return;
+        }
+        var text = (content.innerText || content.textContent || '').trim();
+        if (!text) return;
+
+        var audioUrl = slug ? '/audio/' + slug + '.mp3' : '';
+        console.log('[Read aloud] slug:', slug, '| audioUrl:', audioUrl || '(none)');
+        if (audioUrl) {
+          console.log('[Read aloud] Trying audio file:', audioUrl);
+          var a = new Audio(audioUrl);
+          currentAudio = a;
+          a.onended = stop;
+          a.oncanplaythrough = function () {
+            console.log('[Read aloud] Audio file loaded, playing');
+            if (hint) hint.textContent = 'Playing narration.';
+            a.play();
+            setPlaying(true);
+          };
+          a.onerror = function (e) {
+            console.log('[Read aloud] Audio file failed to load', e.target && e.target.error ? e.target.error.message : '', '- falling back to API/TTS');
+            currentAudio = null;
+            tryApiThenTTS();
+          };
+          a.load();
+        } else {
+          console.log('[Read aloud] No slug, skipping audio file');
+          tryApiThenTTS();
+        }
+
+        function tryApiThenTTS() {
+          console.log('[Read aloud] Trying ElevenLabs API');
+          fetch('/api/speak', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: text }),
+          })
+            .then(function (r) {
+              if (r.ok && r.headers.get('Content-Type') && r.headers.get('Content-Type').indexOf('audio') !== -1) {
+                return r.blob();
+              }
+              return Promise.reject(new Error('Not audio'));
+            })
+            .then(function (blob) {
+              console.log('[Read aloud] API returned audio, playing');
+              if (hint) hint.textContent = 'Playing narration.';
+              currentBlobUrl = URL.createObjectURL(blob);
+              var a = new Audio(currentBlobUrl);
+              currentAudio = a;
+              a.onended = stop;
+              a.onerror = function () {
+                stop();
+              };
+              a.play();
+              setPlaying(true);
+            })
+            .catch(function (err) {
+              console.log('[Read aloud] API failed, using browser TTS', err && err.message ? err.message : '');
+              if (hint) hint.textContent = 'Using device voice.';
+              playWithBrowserTTS();
+            });
+        }
       });
     })();
   </script>
@@ -105,11 +178,13 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
   .reader {
     max-width: var(--measure);
     margin: 0 auto;
-    padding: var(--space) 1rem 3rem;
+    padding: 2rem 1.5rem 3rem;
   }
 
   .reader-header {
     margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--color-border);
   }
 
   .back-link {
@@ -118,6 +193,9 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
     color: var(--color-text-soft);
     text-decoration: none;
     margin-bottom: 0.75rem;
+    padding: 0.25rem 0;
+    border-radius: var(--radius-sm);
+    transition: color 0.15s ease;
   }
 
   .back-link:hover {
@@ -170,18 +248,27 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
 
   .read-aloud-btn {
     font-size: 0.9rem;
-    padding: 0.4rem 0.75rem;
+    padding: 0.5rem 1rem;
     background: var(--color-paper);
     border: 1px solid var(--color-border);
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     color: var(--color-text);
     cursor: pointer;
     font-family: var(--font-sans);
+    transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
   }
 
   .read-aloud-btn:hover {
     border-color: var(--color-accent);
     color: var(--color-accent);
+    background: var(--color-bg);
+  }
+
+  .read-aloud-hint {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--color-text-soft);
+    margin-top: 0.35rem;
   }
 
   .reader-body {
