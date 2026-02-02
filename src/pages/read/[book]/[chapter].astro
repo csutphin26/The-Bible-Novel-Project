@@ -120,6 +120,9 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
         if (currentAudio) {
           currentAudio.pause();
           currentAudio.currentTime = 0;
+          currentAudio.oncanplaythrough = null;
+          currentAudio.onended = null;
+          currentAudio.onerror = null;
           currentAudio = null;
         }
         if (currentBlobUrl) {
@@ -177,13 +180,17 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
           var a = new Audio(audioUrl);
           currentAudio = a;
           mode = 'audio';
-          a.onended = setFinished;
+          a.onended = function () {
+            if (currentAudio === a) setFinished();
+          };
           a.oncanplaythrough = function () {
+            if (currentAudio !== a) return;
             if (hint) hint.textContent = 'Playing narration.';
             a.play();
             setPlaying();
           };
           a.onerror = function (e) {
+            if (currentAudio !== a) return;
             currentAudio = null;
             tryApiThenTTS();
           };
@@ -205,13 +212,18 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
               return Promise.reject(new Error('Not audio'));
             })
             .then(function (blob) {
+              if (status !== 'idle' || currentAudio) return;
               if (hint) hint.textContent = 'Playing narration.';
               currentBlobUrl = URL.createObjectURL(blob);
               var a = new Audio(currentBlobUrl);
               currentAudio = a;
               mode = 'audio';
-              a.onended = setFinished;
-              a.onerror = function () { stop(); };
+              a.onended = function () {
+                if (currentAudio === a) setFinished();
+              };
+              a.onerror = function () {
+                if (currentAudio === a) stop();
+              };
               a.play();
               setPlaying();
             })
