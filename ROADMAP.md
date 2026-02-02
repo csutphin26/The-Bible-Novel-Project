@@ -8,7 +8,7 @@
 
 | Book # | Book Title | Biblical Coverage | Total Chapters (Planned) | Chapters Completed | % Complete | Notes |
 |--------|------------|-------------------|--------------------------|--------------------|------------|-------|
-| 1 | Beginnings | Genesis | 10 | 6 | 60% | Order and Breath ✓, The Garden ✓, The Choice ✓, Brothers ✓, The Flood ✓, A Promise in the Sky ✓ |
+| 1 | Beginnings | Genesis | 15 | 8 | 53% | Order and Breath ✓, The Garden ✓, The Choice ✓, Brothers ✓, The Flood ✓, A Promise in the Sky ✓, Scattered ✓, The Call ✓ |
 | 2 | The God Who Delivers | Exodus | 7 | 0 | 0% | |
 | 3 | Learning to Live with God | Leviticus | 5 | 0 | 0% | |
 | 4 | Between Freedom and the Promise | Numbers | 6 | 0 | 0% | |
@@ -28,14 +28,14 @@
 | 18 | Letters to a Growing Church | Epistles | 12 | 0 | 0% | |
 | 19 | All Things Made New | Revelation | 7 | 0 | 0% | |
 
-**Series 1 (Books 1–5):** Creation → Fall → Promise → Rescue → Preparation | ~33 chapters  
+**Series 1 (Books 1–5):** Creation → Fall → Promise → Rescue → Preparation | ~38 chapters (Book 1 expanded to 15)  
 **Full project:** 19 books | ~150–170 chapters
 
 ---
 
 ## Book 1 — Beginnings (Genesis)
 
-**Chapters:** 8–10 (using 10 in tracking)
+**Chapters:** 15 (expanded so the rest of Genesis has room to breathe—Abraham, Isaac, Jacob, and Joseph each get proper space.)
 
 | # | Chapter Title | Status |
 |---|---------------|--------|
@@ -45,12 +45,18 @@
 | 4 | Brothers | ✓ Complete |
 | 5 | The Flood | ✓ Complete |
 | 6 | A Promise in the Sky | ✓ Complete |
-| 7 | Scattered | Planned |
-| 8 | The Call | Planned |
-| 9 | The Family of Promise | Planned |
-| 10 | From Pit to Palace | Planned |
+| 7 | Scattered | ✓ Complete |
+| 8 | The Call | ✓ Complete |
+| 9 | Covenant and Strangers | Planned |
+| 10 | The Child of Promise | Planned |
+| 11 | Jacob and Esau | Planned |
+| 12 | A Long Way from Home | Planned |
+| 13 | A New Name | Planned |
+| 14 | From Pit to Palace | Planned |
+| 15 | A Family Restored | Planned |
 
-**Focus:** Creation and humanity, Eden, fall, covenant, patriarchs, Joseph.
+**Focus:** Creation and humanity, Eden, fall, covenant, patriarchs, Joseph.  
+**Rough coverage:** 8 = Abraham’s call (Gen 12–15); 9 = Hagar, Sodom, Lot (Gen 16–19); 10 = Isaac born, binding of Isaac (Gen 21–22); 11 = birthright, blessing, Jacob flees (Gen 25–28); 12 = Jacob with Laban, Rachel & Leah (Gen 29–31); 13 = return, wrestling, Israel (Gen 32–36); 14 = Joseph sold, Egypt, rise (Gen 37–41); 15 = famine, brothers, reunion (Gen 42–50).
 
 ---
 
@@ -91,7 +97,7 @@
 ## Series 1 summary (Books 1–5)
 
 One complete story arc: **Creation → Fall → Promise → Rescue → Preparation**  
-Total chapters: ~30–34
+Total chapters: ~35–39 (Book 1 has 15 chapters)
 
 ---
 
