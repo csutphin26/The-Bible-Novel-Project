@@ -39,6 +39,14 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
       <div class="reader-actions">
         <button type="button" class="read-aloud-btn" id="read-aloud-btn" aria-label="Read this chapter aloud">Read aloud</button>
         <button type="button" class="read-aloud-stop-btn" id="read-aloud-stop-btn" aria-label="Stop and reset">Stop</button>
+        <label for="read-aloud-speed" class="read-aloud-speed-label">Speed</label>
+        <select id="read-aloud-speed" class="read-aloud-speed" aria-label="Playback speed">
+          <option value="1">1×</option>
+          <option value="1.2">1.2×</option>
+          <option value="1.5">1.5×</option>
+          <option value="1.7">1.7×</option>
+          <option value="2">2×</option>
+        </select>
         <span class="read-aloud-hint" id="read-aloud-hint" aria-live="polite"></span>
       </div>
     </header>
@@ -67,6 +75,7 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
     (function () {
       var btn = document.getElementById('read-aloud-btn');
       var stopBtn = document.getElementById('read-aloud-stop-btn');
+      var speedSelect = document.getElementById('read-aloud-speed');
       var hint = document.getElementById('read-aloud-hint');
       var content = document.getElementById('chapter-content');
       if (!btn || !content) return;
@@ -76,6 +85,18 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
       var mode = null;       // null | 'audio' | 'tts'
       var currentAudio = null;
       var currentBlobUrl = null;
+
+      function getSpeed() {
+        if (!speedSelect) return 1;
+        var n = parseFloat(speedSelect.value, 10);
+        return isNaN(n) || n <= 0 ? 1 : n;
+      }
+
+      function applySpeedToCurrentAudio() {
+        if (mode === 'audio' && currentAudio) {
+          currentAudio.playbackRate = getSpeed();
+        }
+      }
 
       function updateUI() {
         if (status === 'idle') {
@@ -153,7 +174,7 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
         var text = content.innerText || content.textContent || '';
         if (!text.trim()) return;
         var u = new SpeechSynthesisUtterance(text);
-        u.rate = 0.9;
+        u.rate = getSpeed();
         u.onend = setFinished;
         u.onerror = setFinished;
         synth.speak(u);
@@ -162,6 +183,11 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
       }
 
       if (stopBtn) stopBtn.style.display = 'none';
+      if (speedSelect) {
+        speedSelect.addEventListener('change', function () {
+          applySpeedToCurrentAudio();
+        });
+      }
 
       btn.addEventListener('click', function () {
         if (status === 'playing') {
@@ -186,6 +212,7 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
           a.oncanplaythrough = function () {
             if (currentAudio !== a) return;
             if (hint) hint.textContent = 'Playing narration.';
+            a.playbackRate = getSpeed();
             a.play();
             setPlaying();
           };
@@ -224,6 +251,7 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
               a.onerror = function () {
                 if (currentAudio === a) stop();
               };
+              a.playbackRate = getSpeed();
               a.play();
               setPlaying();
             })
@@ -347,6 +375,29 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
 
   .read-aloud-stop-btn:hover {
     color: var(--color-text);
+  }
+
+  .read-aloud-speed-label {
+    font-size: 0.85rem;
+    color: var(--color-text-soft);
+    margin-left: 0.5rem;
+  }
+
+  .read-aloud-speed {
+    font-size: 0.9rem;
+    padding: 0.35rem 0.5rem;
+    background: var(--color-paper);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    cursor: pointer;
+  }
+
+  .read-aloud-speed:hover,
+  .read-aloud-speed:focus {
+    border-color: var(--color-accent);
+    outline: none;
   }
 
   .read-aloud-hint {
