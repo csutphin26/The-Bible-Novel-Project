@@ -8,7 +8,7 @@
 
 | Book # | Book Title | Biblical Coverage | Total Chapters (Planned) | Chapters Completed | % Complete | Notes |
 |--------|------------|-------------------|--------------------------|--------------------|------------|-------|
-| 1 | Beginnings | Genesis | 15 | 8 | 53% | Order and Breath ✓, The Garden ✓, The Choice ✓, Brothers ✓, The Flood ✓, A Promise in the Sky ✓, Scattered ✓, The Call ✓ |
+| 1 | Beginnings | Genesis | 15 | 11 | 73% | Order and Breath ✓, The Garden ✓, The Choice ✓, Brothers ✓, The Flood ✓, A Promise in the Sky ✓, Scattered ✓, The Call ✓, Covenant and Strangers ✓, The Child of Promise ✓, Jacob and Esau ✓ |
 | 2 | The God Who Delivers | Exodus | 7 | 0 | 0% | |
 | 3 | Learning to Live with God | Leviticus | 5 | 0 | 0% | |
 | 4 | Between Freedom and the Promise | Numbers | 6 | 0 | 0% | |
@@ -47,9 +47,9 @@
 | 6 | A Promise in the Sky | ✓ Complete |
 | 7 | Scattered | ✓ Complete |
 | 8 | The Call | ✓ Complete |
-| 9 | Covenant and Strangers | Planned |
-| 10 | The Child of Promise | Planned |
-| 11 | Jacob and Esau | Planned |
+| 9 | Covenant and Strangers | ✓ Complete |
+| 10 | The Child of Promise | ✓ Complete |
+| 11 | Jacob and Esau | ✓ Complete |
 | 12 | A Long Way from Home | Planned |
 | 13 | A New Name | Planned |
 | 14 | From Pit to Palace | Planned |

@@ -138,6 +138,7 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
       }
 
       function stop() {
+        clearReadAloudHighlight();
         if (currentAudio) {
           currentAudio.pause();
           currentAudio.currentTime = 0;
@@ -162,6 +163,7 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
       }
 
       function setFinished() {
+        clearReadAloudHighlight();
         if (currentBlobUrl) URL.revokeObjectURL(currentBlobUrl);
         currentBlobUrl = null;
         currentAudio = null;
@@ -170,16 +172,49 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
         updateUI();
       }
 
+      function clearReadAloudHighlight() {
+        var paras = content.querySelectorAll('p');
+        for (var i = 0; i < paras.length; i++) paras[i].classList.remove('read-aloud-current');
+      }
+
       function playWithBrowserTTS() {
-        var text = content.innerText || content.textContent || '';
-        if (!text.trim()) return;
-        var u = new SpeechSynthesisUtterance(text);
-        u.rate = getSpeed();
-        u.onend = setFinished;
-        u.onerror = setFinished;
-        synth.speak(u);
+        var paras = content.querySelectorAll('p');
+        if (paras.length === 0) {
+          var text = content.innerText || content.textContent || '';
+          if (!text.trim()) return;
+          var u = new SpeechSynthesisUtterance(text);
+          u.rate = getSpeed();
+          u.onend = setFinished;
+          u.onerror = setFinished;
+          synth.speak(u);
+          mode = 'tts';
+          setPlaying();
+          return;
+        }
         mode = 'tts';
         setPlaying();
+
+        function speakNextParagraph(idx) {
+          if (status !== 'playing' && status !== 'paused') return;
+          clearReadAloudHighlight();
+          if (idx >= paras.length) {
+            setFinished();
+            return;
+          }
+          paras[idx].classList.add('read-aloud-current');
+          paras[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          var u = new SpeechSynthesisUtterance(paras[idx].innerText || paras[idx].textContent || '');
+          u.rate = getSpeed();
+          u.onend = function () {
+            if (status === 'idle') return;
+            speakNextParagraph(idx + 1);
+          };
+          u.onerror = function () {
+            setFinished();
+          };
+          synth.speak(u);
+        }
+        speakNextParagraph(0);
       }
 
       if (stopBtn) stopBtn.style.display = 'none';
@@ -416,6 +451,15 @@ const next = idx >= 0 && idx < sameBook.length - 1 ? sameBook[idx + 1] : null;
 
   .reader-body :global(p) {
     margin: 0 0 0.75rem;
+  }
+
+  .reader-body :global(p.read-aloud-current) {
+    background: color-mix(in srgb, var(--color-accent) 12%, transparent);
+    border-left: 3px solid var(--color-accent);
+    margin-left: -0.25rem;
+    padding-left: 0.5rem;
+    border-radius: 0 4px 4px 0;
+    transition: background 0.2s ease, border-color 0.2s ease;
   }
 
   .reader-body :global(p:last-child) {
